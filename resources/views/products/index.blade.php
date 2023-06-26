@@ -8,14 +8,20 @@
 
 
     <div class="card">
-        <form action="" method="get" class="card-header">
+        <form action="{{ url('product') }}" method="get" class="card-header">
             <div class="form-row justify-content-between">
                 <div class="col-md-2">
                     <input type="text" name="title" placeholder="Product Title" class="form-control">
                 </div>
                 <div class="col-md-2">
                     <select name="variant" id="" class="form-control">
-
+                        <option value="" disabled selected>--Select a Variant--</option>
+                        @foreach($variants as $variant)
+                            <optgroup label="{{ $variant->title }}">
+                                @foreach($variant->productVariants->unique('variant') as $variant) 
+                                <option value="{{ $variant->variant }}">{{ $variant->variant }}</option>
+                                @endforeach
+                        @endforeach
                     </select>
                 </div>
 
@@ -51,23 +57,33 @@
                     </thead>
 
                     <tbody>
-
+                    @foreach($productList as $product)
                     <tr>
-                        <td>1</td>
-                        <td>T-Shirt <br> Created at : 25-Aug-2020</td>
-                        <td>Quality product in low cost</td>
+                        <td>{{ $product->id }}</td>
+                        <td>{{ $product->title }} <br> Created at : 25-Aug-2020</td>
+                        <td>
+                            <div style="max-width: 400px;">
+                            {{ substr_replace($product->description, "...", 40) }}
+                            </div>
+                        </td>
                         <td>
                             <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
-
+                                @foreach($product->variantGroup as $variants)
                                 <dt class="col-sm-3 pb-0">
-                                    SM/ Red/ V-Nick
+                                <!-- SM/ Red/ V-Nick -->
+                                    <div>
+                                    {{ $variants->product_variant_one }} /
+                                    {{ $variants->product_variant_two }} /
+                                    {{ $variants->product_variant_three }}
+                                    </div>
                                 </dt>
                                 <dd class="col-sm-9">
                                     <dl class="row mb-0">
-                                        <dt class="col-sm-4 pb-0">Price : {{ number_format(200,2) }}</dt>
-                                        <dd class="col-sm-8 pb-0">InStock : {{ number_format(50,2) }}</dd>
+                                        <dt class="col-sm-4 pb-0">Price : {{ number_format($variants->price,2) }}</dt>
+                                        <dd class="col-sm-8 pb-0">InStock : {{ number_format($variants->stock,2) }}</dd>
                                     </dl>
                                 </dd>
+                                @endforeach
                             </dl>
                             <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more</button>
                         </td>
@@ -77,6 +93,7 @@
                             </div>
                         </td>
                     </tr>
+                    @endforeach
 
                     </tbody>
 
@@ -88,10 +105,10 @@
         <div class="card-footer">
             <div class="row justify-content-between">
                 <div class="col-md-6">
-                    <p>Showing 1 to 10 out of 100</p>
+                    <p>Showing 1 to {{ count($productList) }} out of {{ $productList->total() }}</p>
                 </div>
                 <div class="col-md-2">
-
+                {!! $productList->links() !!}
                 </div>
             </div>
         </div>

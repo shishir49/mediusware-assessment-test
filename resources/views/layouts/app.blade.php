@@ -14,6 +14,7 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <!-- Styles -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.css" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 {{--<body id="page-top">--}}
