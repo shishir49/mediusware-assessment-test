@@ -6,6 +6,12 @@
         <h1 class="h3 mb-0 text-gray-800">Products</h1>
     </div>
 
+    @if(Session::has('msg'))
+    <div class="alert alert-success" role="alert">
+        <p class="alert alert-info">{{ Session::get('msg') }}</p>
+    </div>
+    @endif
+
 
     <div class="card">
         <form action="{{ url('product') }}" method="get" class="card-header">
@@ -60,7 +66,7 @@
                     @foreach($productList as $product)
                     <tr>
                         <td>{{ $product->id }}</td>
-                        <td>{{ $product->title }} <br> Created at : 25-Aug-2020</td>
+                        <td>{{ $product->title }} <br> Created at : {{ $product->created_at }}</td>
                         <td>
                             <div style="max-width: 400px;">
                             {{ substr_replace($product->description, "...", 40) }}
@@ -72,9 +78,17 @@
                                 <dt class="col-sm-3 pb-0">
                                 <!-- SM/ Red/ V-Nick -->
                                     <div>
-                                    {{ $variants->product_variant_one }} /
-                                    {{ $variants->product_variant_two }} /
-                                    {{ $variants->product_variant_three }}
+                                        @if($variants->product_variant_one)
+                                           {{ \App\Models\ProductVariant::where('id', $variants->product_variant_one)->first()->variant }}
+                                        @endif
+
+                                        @if($variants->product_variant_two)
+                                           / {{ \App\Models\ProductVariant::where('id', $variants->product_variant_two)->first()->variant }}
+                                        @endif
+
+                                        @if($variants->product_variant_three)
+                                           / {{ \App\Models\ProductVariant::where('id', $variants->product_variant_three)->first()->variant }} 
+                                        @endif
                                     </div>
                                 </dt>
                                 <dd class="col-sm-9">
@@ -94,9 +108,7 @@
                         </td>
                     </tr>
                     @endforeach
-
                     </tbody>
-
                 </table>
             </div>
 
